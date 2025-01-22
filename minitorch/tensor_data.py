@@ -42,9 +42,8 @@ def index_to_position(index: Index, strides: Strides) -> int:
     Returns:
         Position in storage
     """
-
-    # TODO: Implement for Task 2.1.
-    raise NotImplementedError("Need to implement for Task 2.1")
+    print('i_to_p called')
+    return sum(index[i] * strides[i] for i in range(len(index)))
 
 
 def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
@@ -60,8 +59,12 @@ def to_index(ordinal: int, shape: Shape, out_index: OutIndex) -> None:
         out_index : return index corresponding to position.
 
     """
-    # TODO: Implement for Task 2.1.
-    raise NotImplementedError("Need to implement for Task 2.1")
+    print('to_index called')
+    for s in range(len(shape)- 1, -1, -1):
+        val = ordinal % shape[s]
+        out_index[s] = val
+        ordinal = ordinal//shape[s]
+        
 
 
 def broadcast_index(
@@ -83,8 +86,9 @@ def broadcast_index(
     Returns:
         None
     """
-    # TODO: Implement for Task 2.2.
-    raise NotImplementedError("Need to implement for Task 2.2")
+    pass
+        
+
 
 
 def shape_broadcast(shape1: UserShape, shape2: UserShape) -> UserShape:
@@ -221,9 +225,30 @@ class TensorData:
         assert list(sorted(order)) == list(
             range(len(self.shape))
         ), f"Must give a position to each dimension. Shape: {self.shape} Order: {order}"
+        if len(list(order)) == 1:
+            return self
+        print("permute called")
+        shape_ls = [0]*len(self.shape)
+        stride_ls = [0]*len(self.shape)
+        list(order)
+        for n in range(len(self.shape)):
+            index = order[n]
+            shape_ls[n] = self.shape[index]
+            stride_ls[n] = self.strides[index]
+        print(f"order={order}, len = {len(list(order))}")
+        print(f"init shape={self.shape}")
+        print(f"output shape={shape_ls}, strides={stride_ls}")
+        t = TensorData(self._storage, tuple(shape_ls), tuple(stride_ls))
+        return t
 
-        # TODO: Implement for Task 2.1.
-        raise NotImplementedError("Need to implement for Task 2.1")
+
+
+
+
+
+
+
+
 
     def to_string(self) -> str:
         s = ""
